@@ -1,0 +1,60 @@
+= Kit
+
+Kit is a framework for making simple management tools called kits. Read about why I wrote kit below for an idea of what Kit can do for you.
+
+== What is Kit?
+
+Kit's in it's infant stage and still changing too much to document everything it does or will do. The best way to understand what Kit is about is to read the motivation behind it (see below). Of course, you can always read the yard docs or source code if you want to see how it's coming.
+
+=== Why I wrote kit
+
+Here are two independent problems Kit will solve (each will be a separate kit).
+
+==== Apache server running multiple virtual hosts (vhosts)
+
+* Each time a vhost is added things have to happen, e.g. config files need to be made, directories created, etc.
+* Depending on the type of vhost, these tasks may be different e.g. what directories are made, how the conifg files look, etc.
+* If vhosts are removed or moved from one type to another, things need to be archived, cleaned up, etc.
+* If the config file template changes, etc., the vhosts should all get updated.
+
+==== Web development server-side site management
+
+Unless you're strictly using a development framework, testing and deploying new code is non-trivial. Exporting your code from your git repo may be more complicated then running cp -R, e.g. compressing JavaScript and CSS. Sometimes, the only place to test a project on is in production environment . I needed a tool that made testing and updating a site running a mix of differnt web software, i.e.
+
+* Clone my production site to one of many testing sites.
+* Push update packages to any of the production or testing sites.
+* Push a git branch to any of the production or testing sites.
+* Allow other developers access to all of these functions without giving them shell access or elevated user privileges.
+
+== Building your own kit
+
+For instructions on how to build your own kit go to
+* https://github.com/razor-x/kit/wiki/Building-your-own-kit
+
+== Installation
+
+=== Gem Installation
+
+Download and install Kit with the following.
+
+ gem install kit
+
+== Development
+
+=== Source Repository
+
+Kit is currently hosted at github. The github web page is
+https://github.com/razor-x/kit. To clone the project run
+
+  git clone git://github.com/razor-x/kit.git
+
+== License
+
+Kit is licensed under the GPLv3.
+
+== Warranty
+
+This software is provided "as is" and without any express or
+implied warranties, including, without limitation, the implied
+warranties of merchantibility and fitness for a particular
+purpose.

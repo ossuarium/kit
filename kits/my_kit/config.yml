@@ -1,0 +1,36 @@
+# Path to this kit's root directory.
+# Absolute or relative to this config file.
+# If not specified, defaults to the folder that holds this config file.
+#
+:kits_path:
+#
+# Database backend to use. Available options:
+#   :sqlite3
+#
+:db_backend: :sqlite3
+#
+# Path to the files to save each sqlite3 database (since only sqlite3 is supported).
+# Absolute or relative to this config file.
+#
+:db_config:
+ :info: "info.db"
+ :actions: "actions.db"
+#
+# Tables and columns for each database.
+#
+# Each table in the :info: database must be of the form
+#   :table_name: [ :rowid, :name, :column_name_1, :column_name_2 ]
+# where :rowid and :name are required columns.
+#
+:info:
+  :bits: [ :rowid, :name, :project, :root, :commit, :commit_time ]
+  :projects: [ :rowid, :name, :git ]
+#
+# Each table in the :actions: database must be of the form
+#   :table_name: [ :rowid, :bit, :status, :column_name_1, :column_name_2 ]
+# where :rowid, :bit, and :status are required columns.
+#
+:actions:
+  :clones: [ :rowid, :bit, :status, :src ]
+  :upgrades: [ :rowid, :bit, :status, :component, :file ]
+  :commits: [ :rowid, :bit, :status, :commit ]
