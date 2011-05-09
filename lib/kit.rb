@@ -4,7 +4,6 @@ class Kit
 	# Loads the settings for the kit.
 	# @param [String, Hash] config path to kit config file or hash of kit settings
 	def initialize config
-
 		config = load_config_file config if File.exists? config
 
 		fail "No path to kit set" unless config[:kits_path]
@@ -27,6 +26,9 @@ class Kit
 		@@actions.keys
 	end
 
+	def bits
+	end
+
 	# Converts a kit config file into a hash of kit settings.
 	# @param [String] file path to a kit config file in yaml format
 	# @return [Hash] kit settings
@@ -35,13 +37,13 @@ class Kit
 		config = YAML.load File.read file
 		@@config_path = File.absolute_path File.dirname file
 
-		dir = config[:kits_path]
 		dir = if config[:kits_path].nil?
 						@@config_path
+					elsif ! [ "/", "~" ].include? config[:kits_path][0]
+						File.absolute_path @@config_path + config[:kits_path]
 					else
-						File.absolute_path @@config_path + config[:kits_path] unless [ "/", "~" ].include? config[:kits_path][0]
+						config[:kits_path]
 					end
-
 		config[:kits_path] = dir
 		return config
 	end
