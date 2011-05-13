@@ -114,16 +114,23 @@ class Backend < Kit
 	end
 
 	public
+
+	# Deletes database files.
+	def delete
+		@db_paths.each do |key, f|
+			File.delete f
+		end
+	end
+
 	def select_all_actions_by_status action, fields, status
 		query = "FROM `#{action}` WHERE `status` = '#{status}'"
 		rows = @action_db.select fields, query
 
-		h = { :action => action }
-		rows.map { |t| t.merge h }
+		rows.map { |t| t.merge ( { :action => action, :status => t[:status].to_sym } ) }
 	end
 
 	def insert_action table, data
-		data.merge! ( { :status => "pending" } )
+		data.merge! ( { :status => :pending.to_s, :time => Time.now.to_i  } )
 		@action_db.execute "INSERT INTO #{table} ( `#{data.keys.join "`, `"}` ) VALUES ( #{data.length.make_placeholders} )", data.values
 		@action_db.last_insert_row_id
 	end
