@@ -35,7 +35,7 @@ For instructions on how to build your own kit go to
 
 === Gem Installation
 
-Download and install Kit with the following.
+Download and install Kit with
 
  gem install kit
 
@@ -50,7 +50,7 @@ https://github.com/razor-x/kit. To clone the project run
 
 == License
 
-Kit is licensed under the GPLv3.
+Kit is licensed under the MIT license.
 
 == Warranty
 

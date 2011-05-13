@@ -1,3 +1,4 @@
+# Class to manage individual bits.
 class Bit < Kit
 
 	# Exceptions.
@@ -10,9 +11,14 @@ class Bit < Kit
 	class NoElement < RuntimeError
 	end
 
+	# Raised when not enough info is given to perform the operation.
+	class MissingValues < RuntimeError
+	end
+
 	attr_reader :id
 
 	# Loads all bit info from database, or attempts to add new bit to database.
+	# Raises a TypeError if not given an integer or hash.
 	# @param [Integer, Hash] info id of bit or info for new bit
 	def initialize info
 		@id = \
@@ -34,6 +40,21 @@ class Bit < Kit
 
 	private
 
+	# Add support fot the dynamic instance variables.
+	class ::Array
+		# Makes a hash that maps symbols in the array to instance variable values.
+		# @param [Object] obj the object with the instance variables to use
+		# @param [Array] exclude instance variables named in this array as symbols are excluded from the hash
+		# @return [Hash] mapping of symbols in the array to instance variable values
+		def hash_ivars obj, exclude = []
+			h = {}
+			self.each do |x|
+				h[x] = obj.instance_variable_get "@#{x}" unless exclude.include? x
+			end
+			return h
+		end
+	end
+
 	# Set group by name or id.
 	# @param [Integer, String] group id or info for group
 	def group= group
@@ -46,24 +67,22 @@ class Bit < Kit
 		end
 	end
 
-	class ::Array
-		def hash_ivars obj, exclude = []
-			h = {}
-			self.each do |x|
-				h[x] = obj.instance_variable_get "@#{x}" unless exclude.include? x
-			end
-			return h
-		end
-	end
-
+	# Inserts a new bit into the database using the availible instance variables.
+	# Raises a MissingValues if required values are not given.
+	# Raises a DuplicateElement if a bit with unique values already exists.
 	def insert_new
-		fail DuplicateElement if lookup_id @@unique[:bits].hash_ivars self
+		uniq = @@unique[:bits].hash_ivars self
+		uniq.each { |x| fail MissingValues if x.nil? }
+
+		fail DuplicateElement if lookup_id uniq
 
 		data = @@info[:bits].hash_ivars self, [ :rowid ]
 		@@db.insert_info :bits, data
 	end
 
+	# (see #insert_new)
 	def insert_new_group
+		fail MissingValues if @group_name.nil?
 		fail DuplicateElement if @@db.select_info_by_name :groups, @@unique[:groups], @group_name
 
 		data = @@info[:groups].hash_ivars self, [ :rowid, :name ]
@@ -72,8 +91,9 @@ class Bit < Kit
 		@@db.insert_info :groups, data
 	end
 
+	# Loads all bit info from the database into instance variables.
 	def load_info
-
+		fail MissingValues if @id.nil?
 		info = @@db.select_info_by_id :bits, @@info[:bits], @id
 		fail NoElement unless info
 
@@ -100,12 +120,12 @@ class Bit < Kit
 		@tasks << task
 	end
 
-	def clear_task task
+# 	def clear_task task
 # 		action = task[:action]
 # 		id = task[:rowid]
 #
 # 		@@db.delete_action_by_id action, id
-	end
+# 	end
 
 	# Runs all tasks in the list of pending tasks and returns the status of each run task.
 	# @return [Hash] key is task id
@@ -125,10 +145,12 @@ class Bit < Kit
 		end
 	end
 
+	# Finds bit ids that match given criteria.
+	# @param [Hash] criteria field / value pairs that will be matched against
+	# @return [Array] bit ids that match criteria
 	def lookup_id criteria
 		@@db.select_info_by_criteria :bits, [:rowid], criteria
 	end
-
 
 end
 

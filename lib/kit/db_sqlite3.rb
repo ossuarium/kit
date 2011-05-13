@@ -2,6 +2,8 @@ require 'sqlite3'
 
 # Methods to make sqlite3 interation more concise.
 module SQLite3Tools
+
+	# Array methods.
 	class ::Array
 		# Converts an array of symbols to a string of backquoted strings for use in SELECT statement
 		# @return [String]
@@ -24,6 +26,7 @@ module SQLite3Tools
 		end
 	end
 
+	# Integer methods.
 	class ::Integer
 		# Generates placeholder string for INSERT statements.
 		# @return String placeholder
@@ -37,6 +40,7 @@ module SQLite3Tools
 		end
 	end
 
+	# SQLite3 database methods.
 	class SQLite3::Database
 		# Selects given columns using given query and converts results to to hashes.
 		# @param [Array<Symbol>] columns names of columns to select
@@ -52,6 +56,7 @@ module SQLite3Tools
 	end
 end
 
+# Backend abstracts database interactions.
 class Backend < Kit
 
 	include SQLite3Tools
@@ -122,35 +127,32 @@ class Backend < Kit
 		end
 	end
 
-	def select_all_actions_by_status action, fields, status
-		query = "FROM `#{action}` WHERE `status` = '#{status}'"
-		rows = @action_db.select fields, query
-
-		rows.map { |t| t.merge ( { :action => action, :status => t[:status].to_sym } ) }
-	end
-
-	def insert_action table, data
-		data.merge! ( { :status => :pending.to_s, :time => Time.now.to_i  } )
-		@action_db.execute "INSERT INTO #{table} ( `#{data.keys.join "`, `"}` ) VALUES ( #{data.length.make_placeholders} )", data.values
-		@action_db.last_insert_row_id
-	end
-
-	def delete_action_by_id action, id
-# 		puts "DELETE FROM `#{action}` WHERE `rowid` = #{id}"
-	end
-
+	# Gets the row from an info table with the given id.
+	# @param [Symbol] table what database table to query
+	# @param [Array] fields list of column names to return
+	# @param [Integer] id rowid of record to return
+	# @return [Array] hash for each returned row with a key for each requested field
 	def select_info_by_id table, fields, id
 		info = @info_db.select fields, "FROM `#{table}` WHERE `rowid` = '#{id}'"
 		info.first
 	end
 
+	# Gets the rows from an info table with the given name.
+	# @param table (see #select_info_by_id)
+	# @param fields (see #select_info_by_id)
+	# @param [String] name of records to return
+	# @return (see #select_info_by_id)
 	def select_info_by_name table, fields, name
 		info = @info_db.select fields, "FROM `#{table}` WHERE `name` = '#{name}'"
 		info.first
 	end
 
+	# Gets the rows from an info table with the given criteria.
+	# @param table (see #select_info_by_id)
+	# @param fields (see #select_info_by_id)
+	# @param [Hash] criteria key / value pairs required to match
+	# @return (see #select_info_by_id)
 	def select_info_by_criteria table, fields, criteria
-
 		q = []
 		criteria.each do |key, value|
 			q << "`#{key}` = '#{value}'"
@@ -160,8 +162,38 @@ class Backend < Kit
 		info.first
 	end
 
+	# Inserts a new row into an info table.
+	# @param table (see #select_info_by_id)
+	# @param [Hash] data key / value pairs for new row
+	# @return [Integer] rowid of new row
 	def insert_info table, data
 		@info_db.execute "INSERT INTO #{table} ( `#{data.keys.join "`, `"}` ) VALUES ( #{data.length.make_placeholders} )", data.values
 		@info_db.last_insert_row_id
 	end
+
+	# Gets the rows from the action table with given status.
+	# @param table (see #select_info_by_id)
+	# @param fields (see #select_info_by_id)
+	# @param [Symbol] status name of status to match
+	# @return (see #select_info_by_id)
+	def select_all_actions_by_status table, fields, status
+		query = "FROM `#{table}` WHERE `status` = '#{status}'"
+		rows = @action_db.select fields, query
+
+		rows.map { |t| t.merge ( { :action => table, :status => t[:status].to_sym } ) }
+	end
+
+	# Inserts a new row into an action table.
+	# @param (see #insert_info)
+	# @return (see #insert_info)
+	def insert_action table, data
+		data.merge! ( { :status => :pending.to_s, :time => Time.now.to_i  } )
+		@action_db.execute "INSERT INTO #{table} ( `#{data.keys.join "`, `"}` ) VALUES ( #{data.length.make_placeholders} )", data.values
+		@action_db.last_insert_row_id
+	end
+
+	# 	def delete_action_by_id action, id
+	# 		puts "DELETE FROM `#{action}` WHERE `rowid` = #{id}"
+	# 	end
+
 end
