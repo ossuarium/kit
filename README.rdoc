@@ -1,35 +1,27 @@
 = Kit
 
-Kit is a framework for making simple management tools called kits. Read about why I wrote kit below for an idea of what Kit can do for you.
-
 == What is Kit?
 
-Kit's in it's infant stage and still changing too much to document everything it does or will do. The best way to understand what Kit is about is to read the motivation behind it (see below). Of course, you can always read the yard docs or source code if you want to see how it's coming.
+Kit is a framework for making simple management tools called kits. Each kit keeps track of a set of objects (the bits) and info about them. Actions of different types can be queued as tasks and run separately. Bits are put into groups so that code for each action type can be different for each group. The tasks are stored in a seperate database, so the permissions for adding tasks and managing bit meta information can be set separately.
 
-=== Why I wrote kit
+== Using Kit
 
-Here are two independent problems Kit will solve (each will be a separate kit).
+To use Kit, you fist need a kit. You can download a {pre-build kit}[https://github.com/razor-x/kit/wiki/Pre-built-kits] or {build your own kit}[https://github.com/razor-x/kit/wiki/Building-your-own-kit]. Once you have a kit, create a new kit object with
 
-==== Apache server running multiple virtual hosts (vhosts)
+  k = Kit.new "/path_to/config.yml"
 
-* Each time a vhost is added things have to happen, e.g. config files need to be made, directories created, etc.
-* Depending on the type of vhost, these tasks may be different e.g. what directories are made, how the conifg files look, etc.
-* If vhosts are removed or moved from one type to another, things need to be archived, cleaned up, etc.
-* If the config file template changes, etc., the vhosts should all get updated.
+where the config file is either the default config file included with the kit, or your own that may override some of the defaults. Now you can start adding bits and queuing and running tasks:
 
-==== Web development server-side site management
+  bit = {  :name => "foo", :group_name => "bar" }
+  k.add_bit bit
 
-Unless you're strictly using a development framework, testing and deploying new code is non-trivial. Exporting your code from your git repo may be more complicated then running cp -R, e.g. compressing JavaScript and CSS. Sometimes, the only place to test a project on is in production environment . I needed a tool that made testing and updating a site running a mix of differnt web software, i.e.
+  { :baz => { :bit => 1 } }.each do |action, options|
+    k.add_task action, options
+  end
 
-* Clone my production site to one of many testing sites.
-* Push update packages to any of the production or testing sites.
-* Push a git branch to any of the production or testing sites.
-* Allow other developers access to all of these functions without giving them shell access or elevated user privileges.
+  k.run_tasks
 
-== Building your own kit
-
-For instructions on how to build your own kit go to
-* https://github.com/razor-x/kit/wiki/Building-your-own-kit
+For more information on what methods are available see the {YARD documentation}[https://rubygems.org/gems/kit] which is hosted at RubyGems.org. For more detailed information on how to use Kit, check out the wiki[https://github.com/razor-x/kit/wiki].
 
 == Installation
 
@@ -47,6 +39,8 @@ Kit is currently hosted at github. The github web page is
 https://github.com/razor-x/kit. To clone the project run
 
   git clone git://github.com/razor-x/kit.git
+
+After cloning, you should run yard to generate documentation for the source.
 
 == License
 

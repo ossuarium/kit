@@ -122,7 +122,7 @@ class Kit
 
 			actions = tasks.group_by { |t| t[:action] } . keys
 			actions.each do |a|
-				load @@kit_path + "/actions/#{a}/#{b.group_name}.rb"
+				load @@kit_path + "/actions/#{b.group_name}/#{a}.rb"
 				b.extend Actions
 			end
 
