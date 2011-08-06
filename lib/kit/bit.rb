@@ -74,7 +74,7 @@ class Bit < Kit
 		uniq = @@unique[:bits].hash_ivars self
 		uniq.each { |x| fail MissingValues if x.nil? }
 
-		fail DuplicateElement if lookup_id uniq
+		fail DuplicateElement if ( lookup_id uniq ).first
 
 		data = @@info[:bits].hash_ivars self, [ :rowid ]
 		@@db.insert_info :bits, data

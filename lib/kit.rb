@@ -85,9 +85,11 @@ class Kit
 			if info.is_a? Integer
 				Bit.new info
 			elsif info.is_a? Hash
-				Bit.new Bit::lookup_id info
+				ids = Bit::lookup_id info
+				raise Bit::DuplicateElement unless ids.length == 1
+				Bit.new ids.first
 			end
-		rescue Bit::NoElement
+		rescue Bit::NoElement, Bit::DuplicateElement
 			nil
 		end
 	end
