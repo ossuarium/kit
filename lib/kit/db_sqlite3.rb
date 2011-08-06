@@ -131,7 +131,7 @@ class Backend < Kit
 	# @param [Symbol] table what database table to query
 	# @param [Array] fields list of column names to return
 	# @param [Integer] id rowid of record to return
-	# @return [Array] hash for each returned row with a key for each requested field
+	# @return [Hash] first matched row with a key for each requested field
 	def select_info_by_id table, fields, id
 		info = @info_db.select fields, "FROM `#{table}` WHERE `rowid` = '#{id}'"
 		info.first
@@ -151,7 +151,7 @@ class Backend < Kit
 	# @param table (see #select_info_by_id)
 	# @param fields (see #select_info_by_id)
 	# @param [Hash] criteria key / value pairs required to match
-	# @return (see #select_info_by_id)
+	# @return [Array] hash for each returned row with a key for each requested field
 	def select_info_by_criteria table, fields, criteria
 		q = []
 		criteria.each do |key, value|
@@ -159,7 +159,6 @@ class Backend < Kit
 		end
 
 		info = @info_db.select fields, "FROM `#{table}` WHERE #{q.join " AND "}"
-		info.first
 	end
 
 	# Inserts a new row into an info table.
