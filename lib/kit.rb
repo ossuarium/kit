@@ -37,7 +37,7 @@ class Kit
 		@@info = config[:info]
 		@@unique = config[:unique]
 		@@actions = config[:actions]
-		@@status_types = [ :pending, :completed, :queued ]
+		@@status_types = [ :pending, :completed, :failed, :running ]
 		@@db = Backend.new config[:db_config]
 
 		# Run initialization specific to the kit.
@@ -112,7 +112,7 @@ class Kit
 			fail NoAction, "#{action}" unless @@actions.include? action
 			@@db.insert_action action, options
 		rescue NoAction => ex
-			puts "Could not add task: no such action: '#{ex.message}'."
+			puts "Could not add task, no such action: '#{ex.message}'."
 		end
 	end
 
@@ -133,7 +133,6 @@ class Kit
 			end
 
 			b.run_all
-			# TODO try and use blocks here to set status to running and then complete / failed as each task runs and finishes
 		end
 	end
 

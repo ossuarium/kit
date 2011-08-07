@@ -15,6 +15,14 @@ class Bit < Kit
 	class MissingValues < RuntimeError
 	end
 
+	# Raised when an action runs but fails due to an invalid combination of options.
+	class InvalidAction < RuntimeError
+	end
+
+	# Raised when an action runs but encounters a fatal error.
+	class FailedAction < RuntimeError
+	end
+
 	attr_reader :id
 
 	# Loads all bit info from database, or attempts to add new bit to database.
@@ -135,14 +143,23 @@ class Bit < Kit
 
 		tasks.each do |t|
 			a = t[:action]
+			id = t[:rowid]
+			status[a] ||= {}
 			begin
+				@@db.update_action_status a, id, { :status => :running }
 				self.send a, t
-				status[a] = "complete"
-			rescue
-				status[a] = "failed"
+				stat = :complete
+				msg = nil
+			rescue InvalidAction, FailedAction => e
+				stat = :failed
+				msg = "#{e.class}: #{e.message}"
+			ensure
+				s = { :status => stat, :message => msg }
+				status[a].merge! ( { id => s } )
+				@@db.update_action_status a, id, s
 			end
-			status
 		end
+		status
 	end
 
 	# Finds bit ids that match given criteria.

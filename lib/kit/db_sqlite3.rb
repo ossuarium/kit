@@ -191,6 +191,20 @@ class Backend < Kit
 		@action_db.last_insert_row_id
 	end
 
+	# Updates the status of a task in an action table.
+	# @param [Symbol] table name of the action table
+	# @param [Integer] action rowid to update
+	# @param [Hash] data key / value pairs to set
+	def update_action_status table, id, data
+		data.merge! ( { :status => data[:status].to_s, :time => Time.now.to_i } )
+		set = []
+		data.each do |key, value|
+			set << "`#{key}` = '#{value}'"
+		end
+
+		@action_db.execute "UPDATE #{table} SET #{set.join ", "} WHERE `rowid` = '#{id}'"
+	end
+
 	# 	def delete_action_by_id action, id
 	# 		puts "DELETE FROM `#{action}` WHERE `rowid` = #{id}"
 	# 	end

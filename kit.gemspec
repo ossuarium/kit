@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
 	spec.name = 'kit'
-	spec.version = '0.1.2'
+	spec.version = '0.2.0'
 
 	spec.author = 'Evan Boyd Sosenko'
 	spec.summary = 'Extendable tool to manage site development and more.'
