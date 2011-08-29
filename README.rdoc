@@ -2,7 +2,7 @@
 
 == What is Kit?
 
-Kit is a framework for making simple management tools called kits. Each kit keeps track of a set of objects (the bits) and info about them. Actions of different types can be queued as tasks and run separately. Bits are put into groups so that code for each action type can be different for each group. The tasks are stored in a seperate database, so the permissions for adding tasks and managing bit meta information can be set separately.
+Kit is a framework for making simple management tools called kits. Each kit keeps track of a set of objects (the bits) and info about them. Actions of different types can be queued as tasks and run separately. Bits are put into groups so that code for each action type can be different for each group. The tasks are stored in a separate database, so the permissions for adding tasks and managing bit meta information can be set separately.
 
 == Using Kit
 
