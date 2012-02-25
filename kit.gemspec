@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
 	spec.name = 'kit'
-	spec.version = '0.2.0'
+	spec.version = '0.3.0'
 
 	spec.author = 'Evan Boyd Sosenko'
 	spec.summary = 'Extendable tool to manage site development and more.'
@@ -18,5 +18,5 @@ Gem::Specification.new do |spec|
 	require 'rake' # need this to use FileList
 	spec.files = FileList[ 'lib/**/*.rb', '[A-Z]*' ].to_a
 
-	spec.license = 'GPL-3'
+	spec.license = 'MIT'
 end

@@ -30,6 +30,7 @@ class Kit
 		begin
 			load @@kit_path + "/bit.rb"
 			load @@kit_path + "/kit.rb"
+			load @@kit_path + "/actions.rb"
 		rescue LoadError
 		end
 
@@ -124,6 +125,7 @@ class Kit
 
 			actions = tasks.group_by { |t| t[:action] } . keys
 			actions.each do |a|
+				load @@kit_path + "/actions/#{a}.rb"
 				load @@kit_path + "/actions/#{b.group_name}/#{a}.rb"
 				b.extend Actions
 			end

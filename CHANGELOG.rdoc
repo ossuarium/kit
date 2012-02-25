@@ -1,0 +1,13 @@
+= Kit ChangeLog
+
+== 0.3.0
+
+=== Breaking changes
+
+* Kits are now expected to have an actions.rb file and specific global action files in the actions directory. This allows one to write methods available to all actions and methods available to specific actions (helps with DRY).  See the skeleton kit for the updated structure.
+
+=== Enhancements
+
+* Added changelog.
+
+=== Bug fixes
