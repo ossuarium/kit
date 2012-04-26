@@ -25,11 +25,17 @@ For more information on what methods are available see the {YARD documentation}[
 
 == Installation
 
-=== Gem Installation
+Add this line to your application's Gemfile:
 
-Download and install Kit with
+  gem 'kit'
 
- gem install kit
+And then execute:
+
+  $ bundle
+
+Or install it yourself as:
+
+  $ gem install kit
 
 == Development
 

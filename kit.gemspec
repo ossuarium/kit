@@ -1,22 +1,25 @@
-Gem::Specification.new do |spec|
-	spec.name = 'kit'
-	spec.version = '0.3.0'
+# -*- encoding: utf-8 -*-
+require File.expand_path( '../lib/kit/version', __FILE__)
 
-	spec.author = 'Evan Boyd Sosenko'
-	spec.summary = 'Extendable tool to manage site development and more.'
+Gem::Specification.new do |gem|
+  gem.authors       = ['Evan Boyd Sosenko']
+  gem.email         = ['razorx@evansosenko.com']
+  gem.description   = %q{Extendable tool to manage site development and more.}
+  gem.summary       = %q{Kit is a framework for making simple management tools called kits.}
+  gem.homepage      = "http://evansosenko.com"
+  gem.license       = 'MIT'
 
-	spec.description = <<-EOF
-		Kit is a framework for making simple management tools called kits.
-	EOF
+  gem.files         = `git ls-files`.split($\)
+  gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
+  gem.name          = 'kit'
+  gem.require_paths = ['lib']
+  gem.platform      = Gem::Platform::RUBY
+  gem.version       = Kit::VERSION
 
-	spec.required_ruby_version = '>= 1.9.2'
+  gem.add_dependency 'sqlite3'
 
-	spec.add_dependency 'sqlite3', '>= 1.3.3'
+  gem.add_development_dependency 'rspec'
 
-	spec.requirements = 'SQLite3'
-
-	require 'rake' # need this to use FileList
-	spec.files = FileList[ 'lib/**/*.rb', '[A-Z]*' ].to_a
-
-	spec.license = 'MIT'
+  gem.requirements  << 'SQLite3'
 end
