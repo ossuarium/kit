@@ -60,21 +60,23 @@ describe Kit do
     context "when the database adapter is sqlite3" do
 
       before :all do
-        @db = File.expand_path "../#{@custom[:kit][:db][:path]}", __FILE__
+        @db = File.expand_path "../#{@custom[:db][:kit][:path]}", __FILE__
       end
 
-      after :all do
-        File.unlink @db if File.exists? @db
+      context "database exists" do
+
+        it "makes active record establish a connection" do
+          File.stub(:exists?).and_return(true)
+          KitDB.should_receive(:establish_connection).with(adapter: 'sqlite3', database: @db)
+          @kit.db_connect @kit.config[:db][:kit], KitDB
+        end
       end
 
-      it "creates the database files" do
-        SQLite3::Database.should_receive(:new).with(@db)
-        @kit.db_connect @kit.config[:db]
-      end
-
-      it "makes active record establish a connection" do
-        ActiveRecord::Base.should_receive(:establish_connection).with(adapter: 'sqlite3', database: @db)
-        @kit.db_connect @kit.config[:db]
+      context "database does not exist" do
+        it "warns user to run rake db:migrate" do
+          File.stub(:exists?).and_return(false)
+          expect { @kit.db_connect(@kit.config[:db][:kit], KitDB) }.to raise_error(LoadError, /rake db:migrate/)
+        end
       end
 
     end

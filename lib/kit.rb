@@ -2,6 +2,8 @@ require 'active_record'
 require 'sqlite3'
 
 require 'kit/version'
+require 'kit/kit_db'
+require 'kit/actions_db'
 require 'kit/bit'
 require 'kit/actions'
 
@@ -25,7 +27,8 @@ class Kit
   # @param custom_config (see #initialize)
   def self.open custom_config
     kit = self.new custom_config
-    kit.db_connect kit.config[:db]
+    kit.db_connect kit.config[:db], KitDB
+
     return kit
   end
 
@@ -51,26 +54,25 @@ class Kit
       @config = YAML.load( File.read @config_file ) unless @config_file.nil?
       @config = YAML.load( File.read "#{path}/config.yml" ).merge(@config)
     end
-
-    @config[:kit]
+    @config
   end
 
   # Creates Active Record connection to database adapter.
   # @param [Hash] db_config settings for ActiveRecord::Base
-  def db_connect db_config
+  def db_connect db_config, db_class
     case db_config[:adapter]
     when :sqlite3
-
       db_path = db_config[:path]
       if ( db_path =~ /^(\/|~)/ ).nil?
         db_path = "#{File.dirname @config_file}/#{db_path}" unless @config_file.nil?
         db_path = File.absolute_path( db_path )
       end
 
-      SQLite3::Database.new db_path unless File.exists? db_path
-      ActiveRecord::Base.establish_connection adapter: 'sqlite3', database: db_path
+      raise LoadError, 'No database found; run rake db:migrate' unless File.exists?(db_path)
+
+      db_class.establish_connection adapter: 'sqlite3', database: db_path
     else
-      raise LoadError, 'No such database adapter'
+      raise LoadError, 'No such database adapter.'
     end
   end
 end

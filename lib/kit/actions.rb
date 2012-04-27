@@ -1,2 +1,2 @@
-class Kit::Actions < ActiveRecord::Base
+class Kit::Actions < ActionsDB
 end
