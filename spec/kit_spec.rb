@@ -4,81 +4,52 @@ describe Kit do
 
   before :all do
     @kit_path = File.expand_path '../../test_kit', __FILE__
-    @config = File.expand_path '../config.yml', __FILE__
-    @default = YAML.load( File.read "#{@kit_path}/config.yml" )
-    @custom = YAML.load( File.read @config )
+    @config_file = File.expand_path '../../test_kit/config.yml', __FILE__
+    @config = YAML.load( File.read "#{@kit_path}/config.yml" )
   end
 
-  describe ".new" do
+  subject { Kit.new @config_file }
 
-    before :each do
-      Kit.any_instance.stub :db_connect
+  describe ".path" do
+
+    it "determines the correct path to the kit" do
+      subject.path.should == @kit_path
     end
+  end
 
-    context "when the path to the kit explicitly given" do
+  describe ".config" do
 
-      it "determines the correct path to the kit" do
-        kit = Kit.new @config
-        kit.path.should == @kit_path
-      end
-    end
-
-    context "when the path to the kit not explicitly given" do
-
-      it "determines the correct path to the kit" do
-        kit = Kit.new "#{@kit_path}/config.yml"
-        kit.path.should == @kit_path
-      end
-    end
-
-    it "merges the default and custom config files" do
-      kit = Kit.new @config
-      kit.instance_variable_get(:@config).should == @default.merge(@custom)
-    end
-
-    it "accecpts a hash for a config and merges it with the default config" do
-      @custom[:path] = File.absolute_path "../#{@custom[:path]}", __FILE__
-      kit = Kit.new @custom
-      kit.instance_variable_get(:@config).should == @default.merge(@custom)
+    it "loads the config file" do
+      subject.config.should == @config
     end
   end
 
   describe ".open" do
 
     it "creates a new kit and opens a database connections" do
-      Kit.any_instance.should_receive :db_connect
-      Kit.open @config
+      Kit.any_instance.should_receive(:db_connect).twice
+      Kit.open @config_file
     end
   end
 
-  describe ".db_connect" do
+  { create: nil, destroy: nil, connect: [Class.new] }.each do |action, args|
 
-    before :each do
-      @kit = Kit.new @config
-    end
+    describe ".db_#{action}" do
 
-    context "when the database adapter is sqlite3" do
-
-      before :all do
-        @db = File.expand_path "../#{@custom[:db][:kit][:path]}", __FILE__
-      end
-
-      context "database exists" do
-
-        it "makes active record establish a connection" do
-          File.stub(:exists?).and_return(true)
-          KitDB.should_receive(:establish_connection).with(adapter: 'sqlite3', database: @db)
-          @kit.db_connect @kit.config[:db][:kit], KitDB
+      it "calls KitSupportDB::#{action}" do
+        if args.nil?
+          KitSupportDB.should_receive(action).with( kind_of Hash )
+          subject.send "db_#{action}", :kit
+        else
+          KitSupportDB.should_receive(action).with( kind_of(Hash), *( args.map { |x| kind_of(x.class) } ) )
+          subject.send "db_#{action}", :kit, *args
         end
       end
 
-      context "database does not exist" do
-        it "warns user to run rake db:migrate" do
-          File.stub(:exists?).and_return(false)
-          expect { @kit.db_connect(@kit.config[:db][:kit], KitDB) }.to raise_error(LoadError, /rake db:migrate/)
-        end
+      it "calls KitSupportDB::#{action} for all databases" do
+        KitSupportDB.should_receive(action).exactly( subject.config[:db].length ).times
+        subject.send "db_#{action}", :all, *args
       end
-
     end
   end
 end

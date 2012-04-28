@@ -2,77 +2,58 @@ require 'active_record'
 require 'sqlite3'
 
 require 'kit/version'
-require 'kit/kit_db'
-require 'kit/actions_db'
+require 'kit/db/support'
+require 'kit/db/kit'
+require 'kit/db/actions'
 require 'kit/bit'
 require 'kit/actions'
 
 class Kit
 
-  # Load a kit.
-  # @param [String, Hash] custom_config path to kit config file or hash of kit settings
-  def initialize custom_config
-    case custom_config
-    when String
-      @config_file = File.absolute_path custom_config
-      config
-    when Hash
-      config custom_config
-    else
-      raise RuntimeError, 'No configuration given.'
-    end
+  # Load a kit with its configuration.
+  # @param [String, Hash] config_file path to kit config file in kit root directory
+  def initialize config_file
+    @config_file = File.absolute_path config_file
+    require "#{path}/bit"
+    require "#{path}/actions"
   end
 
-  # Load a kit and connect to its database.
-  # @param custom_config (see #initialize)
-  def self.open custom_config
-    kit = self.new custom_config
-    kit.db_connect kit.config[:db], KitDB
-
-    return kit
+  # Load a kit with its configuration and connect to its database.
+  # @param config_file (see #initialize)
+  def self.open config_file
+    kit = self.new config_file
+    kit.db_connect kit.config[:db][:kit], KitDB
+    kit.db_connect kit.config[:db][:actions], ActionsDB
+    kit
   end
 
   # Determines and returns the kit's root directory.
   # @return [String] path to kit's root directory
   def path
-    if @path.nil?
-      dir = File.dirname @config_file unless @config_file.nil?
-      @path = @config[:path]
-      @path ||= dir
-      @path = File.absolute_path( "#{dir}/#{@path}" ) if ( @path =~ /^[\/~]/ ).nil?
-    end
-    @path
+    @path ||= File.dirname @config_file
   end
 
-  # Returns the kit settings.
-  # @param [Hash] custom_config used if no config file specified
-  # @return [Hash] kit level settings
-  def config custom_config = nil
-    @config ||= custom_config
-
-    if @config.nil? || custom_config
-      @config = YAML.load( File.read @config_file ) unless @config_file.nil?
-      @config = YAML.load( File.read "#{path}/config.yml" ).merge(@config)
-    end
-    @config
+  # Loads settings from the config file if not already loaded.
+  # @return [Hash] kit settings
+  def config
+    @config ||= YAML.load( File.read @config_file )
   end
 
-  # Creates Active Record connection to database adapter.
-  # @param [Hash] db_config settings for ActiveRecord::Base
-  def db_connect db_config, db_class
-    case db_config[:adapter]
-    when :sqlite3
-      db_path = db_config[:path]
-      if ( db_path =~ /^(\/|~)/ ).nil?
-        db_path = "#{File.dirname @config_file}/#{db_path}" unless @config_file.nil?
-        db_path = File.absolute_path( db_path )
-      end
+  # Dynamically define actions handled by KitSupportDB
+  [:create, :destroy, :connect].each do |action|
+    define_method "db_#{action}".to_sym do |database, *args|
+      db_action action, database, *args
+    end
+  end
 
-      raise LoadError, 'No database found; run rake db:migrate' unless File.exists?(db_path)
+  private
 
-      db_class.establish_connection adapter: 'sqlite3', database: db_path
+  def db_action action, database, *args
+    if database == :all
+      config[:db].each { |c| KitSupportDB.send action, c, *args }
     else
-      raise LoadError, 'No such database adapter.'
+      KitSupportDB.send action, config[:db][database], *args
     end
   end
+
 end

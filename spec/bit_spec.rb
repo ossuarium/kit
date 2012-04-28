@@ -2,23 +2,20 @@ require 'kit'
 
 describe Kit::Bit do
 
+  CONFIG_FILE = File.expand_path '../../test_kit/config.yml', __FILE__
+
   before :all do
-    @config = File.expand_path '../config.yml', __FILE__
+    Kit.new(CONFIG_FILE).db_create
   end
 
   after :all do
-    config = YAML.load( File.read @config )
-    db = File.expand_path "../#{config[:kit][:db][:path]}", __FILE__
-    File.unlink db if File.exists? db
+    Kit.new(CONFIG_FILE).db_destroy
+  end
+
+  before :each do
+    @kit = Kit.open CONFIG_FILE
   end
 
   describe ".new" do
-
-    it "makes a bit" do
-      kit = Kit.open @config
-      bit = Kit::Bit.new name: "test"
-      bit.save
-    end
-
   end
 end
