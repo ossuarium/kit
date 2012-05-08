@@ -17,11 +17,11 @@ Gem::Specification.new do |gem|
   gem.platform      = Gem::Platform::RUBY
   gem.version       = Kit::VERSION
 
-  gem.add_dependency 'sqlite3'
   gem.add_dependency 'activerecord'
+  gem.add_dependency 'rake'
 
+  gem.add_development_dependency 'sqlite3'
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'git'
 
-  gem.requirements  << 'SQLite3'
 end

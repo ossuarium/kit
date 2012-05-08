@@ -33,10 +33,10 @@ class Kit
     @path ||= File.dirname @config_file
   end
 
-  # Loads settings from the config file if not already loaded.
+  # Loads settings from the config file (only loads from file on first call).
   # @return [Hash] kit settings
   def config
-    @config ||= YAML.load( File.read @config_file )
+    @config ||= YAML.load(File.read @config_file)
   end
 
   # Dynamically define actions handled by KitSupportDB
@@ -44,13 +44,18 @@ class Kit
     define_method "db_#{action}".to_sym do |database, *args|
       db_action action, database, *args
     end
+
+    define_method "db_#{action}!".to_sym do |database, *args|
+      db_action! action, database, *args
+    end
   end
 
   private
 
+  # Passes db_* method calls to KitSupportDB.
   def db_action action, database, *args
     if database == :all
-      config[:db].each { |c| KitSupportDB.send action, c, *args }
+      config[:db].each { |_, v| KitSupportDB.send action, v, *args }
     else
       KitSupportDB.send action, config[:db][database], *args
     end
