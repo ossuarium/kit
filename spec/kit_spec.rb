@@ -27,7 +27,7 @@ describe Kit do
   describe ".open" do
 
     it "creates a new kit and opens a database connections" do
-      Kit.any_instance.should_receive(:db_connect).twice
+      Kit.any_instance.should_receive(:db_connect)
       Kit.open @config_file
     end
   end
@@ -36,18 +36,18 @@ describe Kit do
 
     describe ".db_#{action}" do
 
-      it "calls KitSupportDB::#{action}" do
+      it "calls KitDBSupport::#{action}" do
         if args.nil?
-          KitSupportDB.should_receive(action).with( kind_of Hash )
+          KitDBSupport.should_receive(action).with( kind_of Hash )
           subject.send "db_#{action}", :kit
         else
-          KitSupportDB.should_receive(action).with( kind_of(Hash), *( args.map { |x| kind_of(x.class) } ) )
+          KitDBSupport.should_receive(action).with( kind_of(Hash), *( args.map { |x| kind_of(x.class) } ) )
           subject.send "db_#{action}", :kit, *args
         end
       end
 
-      it "calls KitSupportDB::#{action} for all databases" do
-        KitSupportDB.should_receive(action).exactly( subject.config[:db].length ).times
+      it "calls KitDBSupport::#{action} for all databases" do
+        KitDBSupport.should_receive(action).exactly( subject.config[:db].length ).times
         subject.send "db_#{action}", :all, *args
       end
     end

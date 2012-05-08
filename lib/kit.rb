@@ -2,11 +2,8 @@ require 'active_record'
 require 'sqlite3'
 
 require 'kit/version'
-require 'kit/db/support'
-require 'kit/db/kit'
-require 'kit/db/actions'
+require 'kit/db_support'
 require 'kit/bit'
-require 'kit/actions'
 
 class Kit
 
@@ -15,15 +12,13 @@ class Kit
   def initialize config_file
     @config_file = File.absolute_path config_file
     require "#{path}/bit"
-    require "#{path}/actions"
   end
 
   # Load a kit with its configuration and connect to its database.
   # @param config_file (see #initialize)
   def self.open config_file
     kit = self.new config_file
-    kit.db_connect kit.config[:db][:kit], KitDB
-    kit.db_connect kit.config[:db][:actions], ActionsDB
+    kit.db_connect kit.config[:db][:kit]
     kit
   end
 
@@ -55,9 +50,9 @@ class Kit
   # Passes db_* method calls to KitSupportDB.
   def db_action action, database, *args
     if database == :all
-      config[:db].each { |_, v| KitSupportDB.send action, v, *args }
+      config[:db].each { |_, v| KitDBSupport.send action, v, *args }
     else
-      KitSupportDB.send action, config[:db][database], *args
+      KitDBSupport.send action, config[:db][database], *args
     end
   end
 

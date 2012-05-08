@@ -1,3 +1,2 @@
-class Kit::Bit < KitDB
-  self.table_name = 'bits'
+class Kit::Bit < ActiveRecord::Base
 end

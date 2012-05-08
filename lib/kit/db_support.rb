@@ -1,4 +1,4 @@
-module KitSupportDB
+module KitDBSupport
 
   def self.create! config
     case config[:adapter]
@@ -39,7 +39,7 @@ module KitSupportDB
   # Establishes an ActiveRecord::Base connection.
   # @param [Hash] db_config settings for ActiveRecord::Base
   # @param [Class] db_class ActiveRecord::Base subclass to receive connection
-  def self.connect config, ar_class
-    ar_class.establish_connection config
+  def self.connect config
+    ActiveRecord::Base.establish_connection config
   end
 end
