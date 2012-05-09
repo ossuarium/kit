@@ -18,7 +18,7 @@ class Kit
   # @param config_file (see #initialize)
   def self.open config_file
     kit = self.new config_file
-    kit.db_connect kit.config[:db][:kit]
+    kit.db_connect
     kit
   end
 
@@ -35,24 +35,27 @@ class Kit
   end
 
   # Dynamically define actions handled by KitSupportDB
-  [:create, :destroy, :connect].each do |action|
-    define_method "db_#{action}".to_sym do |database, *args|
-      db_action action, database, *args
+  [:create, :destroy, :connect, :migrate, :migrate_to].each do |action|
+    define_method "db_#{action}".to_sym do |*args|
+      db_action action, *args
     end
+  end
 
-    define_method "db_#{action}!".to_sym do |database, *args|
-      db_action! action, database, *args
+  # Some actions have bang versions.
+  [:create, :destroy].each do |action|
+    define_method "db_#{action}!".to_sym do |*args|
+      db_action action, *args
     end
   end
 
   private
 
   # Passes db_* method calls to KitSupportDB.
-  def db_action action, database, *args
-    if database == :all
-      config[:db].each { |_, v| KitDBSupport.send action, v, *args }
+  def db_action action, *args
+    if [:migrate, :migrate_to].include? action
+      KitDBSupport.send action, path, *args
     else
-      KitDBSupport.send action, config[:db][database], *args
+      KitDBSupport.send action, config[:db], *args
     end
   end
 

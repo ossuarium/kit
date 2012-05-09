@@ -1,5 +1,8 @@
 module KitDBSupport
 
+  # Create a database.
+  # @raise RuntimeError This will raise an exception if databse exists.
+  # @param [Hash] config ActiveRecord::Base database configuration
   def self.create! config
     case config[:adapter]
     when 'sqlite3'
@@ -11,6 +14,7 @@ module KitDBSupport
     end
   end
 
+  # (see #create!)
   def self.create *args
     begin
       create! *args
@@ -18,6 +22,9 @@ module KitDBSupport
     end
   end
 
+  # Destory a database.
+  # @raise RuntimeError This will raise an exception if databse does not exist.
+  # @param (see create!)
   def self.destroy! config
     case config[:adapter]
     when 'sqlite3'
@@ -29,6 +36,7 @@ module KitDBSupport
     end
   end
 
+  # (see #destroy)
   def self.destroy *args
     begin
       destroy! *args
@@ -41,5 +49,24 @@ module KitDBSupport
   # @param [Class] db_class ActiveRecord::Base subclass to receive connection
   def self.connect config
     ActiveRecord::Base.establish_connection config
+  end
+
+  # Migrate up or down a given number of migrations.
+  # @param [String] path location of migration files
+  # @param [Symbol] direction
+  # @param [Integer] steps
+  def self.migrate path, direction = nil, steps = 1
+    if direction.nil?
+      ActiveRecord::Migrator.migrate(path, ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
+    else
+      ActiveRecord::Migrator.send direction, path, steps
+    end
+  end
+
+  # Migrate to a specfic migration.
+  # @param path (see #migrate)
+  # @param [Integer] version the migration number
+  def self.migrate_to path, version
+    ActiveRecord::Migrator.migrate(path, version)
   end
 end

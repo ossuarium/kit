@@ -32,23 +32,19 @@ describe Kit do
     end
   end
 
-  { create: nil, destroy: nil, connect: [Class.new] }.each do |action, args|
+  db_actions              = {}
+  db_actions[:destroy]    = [Hash.new]
+  db_actions[:create]     = [Hash.new]
+  db_actions[:migrate]    = [String.new, Hash.new, 0]
+  db_actions[:migrate_to] = [String.new, 0]
+
+  db_actions.each do |action, args|
 
     describe ".db_#{action}" do
 
       it "calls KitDBSupport::#{action}" do
-        if args.nil?
-          KitDBSupport.should_receive(action).with( kind_of Hash )
-          subject.send "db_#{action}", :kit
-        else
-          KitDBSupport.should_receive(action).with( kind_of(Hash), *( args.map { |x| kind_of(x.class) } ) )
-          subject.send "db_#{action}", :kit, *args
-        end
-      end
-
-      it "calls KitDBSupport::#{action} for all databases" do
-        KitDBSupport.should_receive(action).exactly( subject.config[:db].length ).times
-        subject.send "db_#{action}", :all, *args
+        KitDBSupport.should_receive(action).with( *( args.map { |x| kind_of(x.class) } ) )
+        subject.send "db_#{action}", *args[1..-1]
       end
     end
   end

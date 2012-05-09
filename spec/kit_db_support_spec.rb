@@ -81,4 +81,30 @@ describe KitDBSupport do
       KitDBSupport::connect @config[:sqlite3]
     end
   end
+
+  describe "migrate" do
+
+    it "migrates to latest version when called with no arguments" do
+      ActiveRecord::Migrator.should_receive(:migrate)
+      KitDBSupport::migrate 'migrations'
+    end
+
+    it "migrates one step in a given direction" do
+      ActiveRecord::Migrator.should_receive(:up).with('migrations', 1)
+      KitDBSupport::migrate 'migrations', :up
+    end
+
+    it "migrates many steps in a given direction" do
+      ActiveRecord::Migrator.should_receive(:up).with('migrations', 3)
+      KitDBSupport::migrate 'migrations', :up, 3
+    end
+  end
+
+  describe "migrate_to" do
+
+    it "migrates to a specific migration" do
+      ActiveRecord::Migrator.should_receive(:migrate).with('migrations', 001)
+      KitDBSupport::migrate_to 'migrations', 001
+    end
+  end
 end
