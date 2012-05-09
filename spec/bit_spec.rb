@@ -2,20 +2,16 @@ require 'kit'
 
 describe Kit::Bit do
 
-  CONFIG_FILE = File.expand_path '../../test_kit/config.yml', __FILE__
-
   before :all do
-    Kit.new(CONFIG_FILE).db_create
+    @config_file = File.expand_path '../../test_kit/config.yml', __FILE__
+    Kit.new(@config_file).db_create.db_connect.db_migrate
   end
 
   after :all do
-    Kit.new(CONFIG_FILE).db_destroy
+    Kit.new(@config_file).db_destroy
   end
 
   before :each do
-    @kit = Kit.open CONFIG_FILE
-  end
-
-  describe ".new" do
+    @kit = Kit.open @config_file
   end
 end

@@ -11,7 +11,7 @@ class Kit
   # @param [String, Hash] config_file path to kit config file in kit root directory
   def initialize config_file
     @config_file = File.absolute_path config_file
-    require "#{path}/bit"
+    Dir["#{path}/*.rb"].each { |f| require f }
   end
 
   # Load a kit with its configuration and connect to its database.
@@ -34,10 +34,11 @@ class Kit
     @config ||= YAML.load(File.read @config_file)
   end
 
-  # Dynamically define actions handled by KitSupportDB
+  # Dynamically define actions handled by KitDBSupport.
   [:create, :destroy, :connect, :migrate, :migrate_to].each do |action|
     define_method "db_#{action}".to_sym do |*args|
       db_action action, *args
+      return self
     end
   end
 
@@ -45,6 +46,7 @@ class Kit
   [:create, :destroy].each do |action|
     define_method "db_#{action}!".to_sym do |*args|
       db_action action, *args
+      return self
     end
   end
 
@@ -55,6 +57,10 @@ class Kit
     if [:migrate, :migrate_to].include? action
       KitDBSupport.send action, path, *args
     else
+      if config[:db][:adapter] == 'sqlite3'
+        db_path = config[:db][:database]
+        config[:db][:database] = "#{path}/#{db_path}" unless db_path =~ /^(\/|~)/
+      end
       KitDBSupport.send action, config[:db], *args
     end
   end

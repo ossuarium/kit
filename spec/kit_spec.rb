@@ -46,6 +46,11 @@ describe Kit do
         KitDBSupport.should_receive(action).with( *( args.map { |x| kind_of(x.class) } ) )
         subject.send "db_#{action}", *args[1..-1]
       end
+
+      it "returns the instance of Kit" do
+        KitDBSupport.stub action
+        subject.send("db_#{action}", *args[1..-1]).should equal subject
+      end
     end
   end
 end
