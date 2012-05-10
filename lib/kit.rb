@@ -12,7 +12,8 @@ class Kit
   # @param [String, Hash] config_file path to kit config file in kit root directory
   def initialize config_file
     @config_file = File.absolute_path config_file
-    Dir["#{path}/*.rb"].each { |f| require f }
+    Dir["#{path}/models/*.rb"].each { |f| require f }
+    Dir["#{path}/actions/*.rb"].each { |f| require f }
   end
 
   # Load a kit with its configuration and connect to its database.
@@ -32,7 +33,7 @@ class Kit
   # Loads settings from the config file (only loads from file on first call).
   # @return [Hash] kit settings
   def config
-    @config ||= YAML.load(File.read @config_file)
+    @config ||= YAML.load File.read(@config_file)
   end
 
   # Dynamically define actions handled by KitDBSupport.

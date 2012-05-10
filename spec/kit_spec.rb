@@ -5,7 +5,7 @@ describe Kit do
   before :all do
     @kit_path = File.expand_path '../../test_kit', __FILE__
     @config_file = File.expand_path '../../test_kit/config.yml', __FILE__
-    @config = YAML.load( File.read "#{@kit_path}/config.yml" )
+    @config = YAML.load File.read("#{@kit_path}/config.yml")
   end
 
   subject { Kit.new @config_file }

@@ -12,6 +12,6 @@ describe Kit::Bit do
   end
 
   before :each do
-    @kit = Kit.open @config_file
+    Kit.open @config_file
   end
 end
