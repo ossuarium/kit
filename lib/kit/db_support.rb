@@ -45,8 +45,7 @@ module KitDBSupport
   end
 
   # Establishes an ActiveRecord::Base connection.
-  # @param [Hash] db_config settings for ActiveRecord::Base
-  # @param [Class] db_class ActiveRecord::Base subclass to receive connection
+  # @param [Hash] config settings for ActiveRecord::Base
   def self.connect config
     ActiveRecord::Base.establish_connection config
   end
