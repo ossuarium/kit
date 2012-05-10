@@ -5,6 +5,9 @@ class Kit::Bit < ActiveRecord::Base
   has_many :users, :through => :permissions
 
   after_initialize do
-    self.extend Kernel.const_get("KitActions#{self.group.name.gsub(' ', '_').camelize}")
+    unless self.group.nil?
+      mod = "KitActions#{self.group.name.gsub(' ', '_').camelize}"
+      self.extend Kernel.const_get(mod) if Kernel.const_defined? mod
+    end
   end
 end

@@ -16,6 +16,8 @@ describe KitDBSupport do
 
     context "adapter is sqlite3" do
 
+      it "creates the db folder if it does not exist"
+
       it "creates the sqlite3 database file" do
         File.stub(:exists?).with(@sqlite3[:database]).and_return(false)
         SQLite3::Database.should_receive(:new).with(@sqlite3[:database])
@@ -48,6 +50,8 @@ describe KitDBSupport do
     end
 
     context "adapter is sqlite3" do
+
+      it "unlinks the db folder if it is empty"
 
       it "unlinks the sqlite3 databasefile " do
         File.stub(:exists?).with(@sqlite3[:database]).and_return(true)
