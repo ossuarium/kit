@@ -17,28 +17,40 @@ describe Kit::Bit do
 
   describe Kit::Bit::Job do
 
-    subject { Kit::Bit::Job.new @config_file, 1, :the_action, :arg_1, :arg_2 }
+    [:args, :hash].each do |type|
 
-    describe ".perform" do
+      describe ".perform" do
 
-      before :each do
-        @bit = mock('Kit::Bit', :id => 1, :the_action => nil)
-        Kit::Bit.stub(:find).and_return(@bit)
-      end
+        context "given #{type}" do
 
-      it "opens the kit" do
-        Kit.should_receive(:open).with(@config_file)
-        subject.perform
-      end
+          config = File.expand_path '../../test_kit/config.yml', __FILE__
+          if type == :args
+            subject { Kit::Bit::Job.new config, 1, :the_action, :arg_1, :arg_2 }
+          else
+            hash = { config_file: config, bit_id: 1, action: :the_action, args: [:arg_1, :arg_2] }
+            subject { Kit::Bit::Job.new hash }
+          end
 
-      it "looks for the bit" do
-        Kit::Bit.should_receive(:find).with(1)
-        subject.perform
-      end
+          before :each do
+            @bit = mock('Kit::Bit', :id => 1, :the_action => nil)
+            Kit::Bit.stub(:find).and_return(@bit)
+          end
 
-      it "runs the action on the bit" do
-        @bit.should_receive(:the_action).with(:arg_1, :arg_2)
-        subject.perform
+          it "opens the kit" do
+            Kit.should_receive(:open).with(@config_file)
+            subject.perform
+          end
+
+          it "looks for the bit" do
+            Kit::Bit.should_receive(:find).with(1)
+            subject.perform
+          end
+
+          it "runs the action on the bit" do
+            @bit.should_receive(:the_action).with(:arg_1, :arg_2)
+            subject.perform
+          end
+        end
       end
     end
   end

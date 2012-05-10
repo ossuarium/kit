@@ -13,11 +13,15 @@ class Kit::Bit < ActiveRecord::Base
 
   class Job
 
-    def initialize config_file, bit_id, action, *args
-      @config_file = config_file
-      @bit_id = bit_id
-      @action = action
-      @args = *args
+    def initialize *args
+      if args[0].is_a? Hash
+        hash = args[0]
+        args = [ hash[:config_file], hash[:bit_id], hash[:action], *hash[:args] ]
+      end
+      @config_file = args[0]
+      @bit_id      = args[1]
+      @action      = args[2]
+      @args        = *args[3..-1]
     end
 
     def perform
