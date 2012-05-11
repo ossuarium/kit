@@ -1,3 +1,3 @@
-require 'kit_admin/database'
-require 'kit_admin/manage'
-require 'kit_admin/make'
+require 'kit/rake/admin/database'
+require 'kit/rake/admin/manage'
+require 'kit/rake/admin/make'
