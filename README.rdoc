@@ -1,27 +1,42 @@
 = Kit
 
+<b>A framework for making simple management tools called kits.</b>
+
+<em>Write your shell scripts in beautiful Ruby, put them in a kit, and keep them DRY.</em>
+
 == What is Kit?
 
-Kit is a framework for making simple management tools called kits. Each kit keeps track of a set of objects (the bits) and info about them. Actions of different types can be queued as tasks and run separately. Bits are put into groups so that code for each action type can be different for each group. The tasks are stored in a separate database, so the permissions for adding tasks and managing bit meta information can be set separately.
+Kit is written using Active Record, so if you have worked with Rails, then Kit should feel familiar.
 
-== Using Kit
+Each kit keeps track of a set of objects (the bits) and info about them.
+Bits know how to preform actions you create for them,
+and can be put into groups so each type of bit can have its own set of actions.
+Users and permissions can be set to control access to bits and actions.
 
-To use Kit, you fist need a kit. You can download a {pre-build kit}[https://github.com/razor-x/kit/wiki/Pre-built-kits] or {build your own kit}[https://github.com/razor-x/kit/wiki/Building-your-own-kit]. Once you have a kit, create a new kit object with
 
-  k = Kit.new "/path_to/config.yml"
+Kit supports a robust action queue though {Delayed_job}[https://github.com/tobi/delayed_job].
+The action queue doesn't have to be in the same database the kit uses,
+so one process can be responsible for queuing tasks and another for running them.
 
-where the config file is either the default config file included with the kit, or your own that may override some of the defaults. Now you can start adding bits and queuing and running tasks:
+=== Example use scenario
 
-  bit = {  :name => "foo", :group_name => "bar" }
-  k.add_bit bit
+What can you use kit for? Here is an example a web server admin might be familiar with.
 
-  { :baz => { :bit => 1 } }.each do |action, options|
-    k.add_task action, options
-  end
+Say you are running Apache with multiple virtual hosts (vhosts).
+You are constantly adding new domain names, updating their configurations, etc.
+Here is how a Kit could manage the vhosts.
 
-  k.run_tasks
+* Each vhost is a bit.
+* Actions might look like
 
-For more information on what methods are available see the {YARD documentation}[https://rubygems.org/gems/kit] which is hosted at RubyGems.org. For more detailed information on how to use Kit, check out the wiki[https://github.com/razor-x/kit/wiki].
+    vhost.create                 #=> set up directory structure
+    vhost.generate_apache_config #=> generate new apache config files from ERB template
+    vhost.online                 #=> make website accessible
+    vhost.offline                #=> set a static 'site is down' page
+    vhost.destroy                #=> remove all trace of the vhost
+
+* By grouping the vhosts, each action can depend on the type of web application the vhost will be running.
+* Kit can store metadata about the vhosts which you can use when defining actions.
 
 == Installation
 
@@ -37,16 +52,51 @@ Or install it yourself as:
 
   $ gem install kit
 
+== Getting started with kit
+
+=== Documentation
+
+* {Full source documentation}[rubydoc.info/gems/kit/frames] is hosted on the {gem page}[https://rubygems.org/gems/kit].
+* A {comprehensive wiki}[https://github.com/razor-x/kit/wiki] is available on github.
+
+=== Kit basics
+
+To use Kit, you will need a kit. You can either
+download a {pre-build kit}[https://github.com/razor-x/kit/wiki/Pre-built-kits] or
+{build your own kit}[https://github.com/razor-x/kit/wiki/Building-your-own-kit].
+
+Once you have a kit, navigate to the root directory and run
+
+  $ rake db:migrate
+
+This will set up the database.
+Create an action by adding a method to the +KitActionsDefault+ module located in +actions/default.rb+.
+
+Open the kit
+
+  require 'kit'
+  Kit.open 'config.yml'
+
+and make a new bit.
+
+  Kit::Bit.create :name => 'lilac'
+
+Now you can call the action with
+
+  Kit::Bit.find_by_name('lilac').plant_seeds
+
+If you got this far, refer to the documentation listed above for more examples of what kit can do.
+
 == Development
 
 === Source Repository
 
-Kit is currently hosted at github. The github web page is
-https://github.com/razor-x/kit. To clone the project run
+The {Kit source}[https://github.com/razor-x/kit] is currently hosted at github.
+To clone the project run
 
   git clone git://github.com/razor-x/kit.git
 
-After cloning, you should run yard to generate documentation for the source.
+After cloning, you can run +yard+ to generate documentation for the source.
 
 == License
 

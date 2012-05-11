@@ -1,10 +1,19 @@
 = Kit ChangeLog
 
+== 1.0.0
+
+=== Breaking changes
+
+Kit has been completely rewritten using Active Record.
+See the {README}[http://rubydoc.info/gems/kit/frames] and {wiki}[https://github.com/razor-x/kit/wiki] for new documentation.
+
 == 0.3.0
 
 === Breaking changes
 
-* Kits are now expected to have an actions.rb file and specific global action files in the actions directory. This allows one to write methods available to all actions and methods available to specific actions (helps with DRY).  See the skeleton kit for the updated structure.
+* Kits are now expected to have an actions.rb file and specific global action files in the actions directory.
+This allows one to write methods available to all actions and methods available to specific actions (helps with DRY).
+See the skeleton kit for the updated structure.
 
 === Enhancements
 
