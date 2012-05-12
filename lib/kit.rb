@@ -3,8 +3,10 @@ require 'sqlite3'
 
 require 'kit/version'
 require 'kit/db_support'
-
-Dir["#{File.expand_path '../../lib/kit/models', __FILE__}/*.rb"].each { |f| require f }
+require 'kit/models/bit'
+require 'kit/models/group'
+require 'kit/models/user'
+require 'kit/models/permission'
 
 class Kit
 
