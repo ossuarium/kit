@@ -15,8 +15,7 @@ Users and permissions can be set to control access to bits and actions.
 
 
 Kit supports a robust action queue though {Delayed_job}[https://github.com/tobi/delayed_job].
-One process can be responsible for queuing tasks and another for running them,
-and the action queue doesn't have to be in the same database the kit uses.
+One process can be responsible for queuing tasks and another for running them.
 
 === Example use scenario
 
