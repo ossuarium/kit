@@ -64,8 +64,11 @@ Or install it yourself as:
 === Kit basics
 
 To use Kit, you will need a kit. You can either
-download a {pre-build kit}[https://github.com/razor-x/kit/wiki/Pre-built-kits] or
-{build your own kit}[https://github.com/razor-x/kit/wiki/Building-your-own-kit].
+* Download a {community built kit}[https://github.com/razor-x/kit/wiki/Community-built-kits].
+* {Build your own kit}[https://github.com/razor-x/kit/wiki/Building-your-own-kit].
+If you skipped the above links and just want to get started, run
+
+  $ mkdir my_kit && cd my_kit && git init && git pull git://github.com/razor-x/kits_skeleton.git
 
 Once you have a kit, navigate to the root directory and run
 
