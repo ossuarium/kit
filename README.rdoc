@@ -40,6 +40,8 @@ Here is how a Kit could manage the vhosts.
 
 == Installation
 
+<b>Kit 1.0.0 has not been released yet. An official release is expected soon.</b>
+
 Add this line to your application's Gemfile:
 
   gem 'kit'
