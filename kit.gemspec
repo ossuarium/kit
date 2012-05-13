@@ -4,8 +4,8 @@ require File.expand_path( '../lib/kit/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ['Evan Boyd Sosenko']
   gem.email         = ['razorx@evansosenko.com']
-  gem.description   = %q{Extendable tool to manage site development and more.}
-  gem.summary       = %q{Kit is a framework for making simple management tools called kits.}
+  gem.description   = %q{Kit is a framework for making simple management tools called kits.}
+  gem.summary       = %q{Write your shell scripts in beautiful Ruby, put them in a kit, and keep them DRY.}
   gem.homepage      = "http://evansosenko.com"
   gem.license       = 'MIT'
 
