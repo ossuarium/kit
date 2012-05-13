@@ -39,8 +39,6 @@ Here is how a Kit could manage the vhosts.
 
 == Installation
 
-<b>Kit 1.0.0 has not been released yet. An official release is expected soon.</b>
-
 Add this line to your application's Gemfile:
 
   gem 'kit'
@@ -98,9 +96,16 @@ If you got this far, refer to the documentation listed above for more examples o
 The {Kit source}[https://github.com/razor-x/kit] is currently hosted at github.
 To clone the project run
 
-  git clone git://github.com/razor-x/kit.git
+  $ git clone git://github.com/razor-x/kit.git
 
-After cloning, you can run +yard+ to generate documentation for the source.
+After cloning, you can run +yard+ to generate documentation for the source
+
+  $ cd kit
+  $ yard
+
+You will also need to set up the test_kit to run specs. Do this with
+
+  $ rake develop:prepare
 
 == License
 
