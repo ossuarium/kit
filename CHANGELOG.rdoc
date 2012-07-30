@@ -1,5 +1,12 @@
 = Kit ChangeLog
 
+== 1.1.0
+
+=== Breaking changes
+
++KitActionsDefault+ now extends all +Kit::Bit+ instances instead of only those without a group.
+
+
 == 1.0.0
 
 === Breaking changes

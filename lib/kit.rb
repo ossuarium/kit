@@ -15,6 +15,7 @@ class Kit
   def initialize config_file
     @config_file = File.absolute_path config_file
     Dir["#{path}/models/*.rb"].each { |f| require f }
+    require "#{path}/actions/default"
     Dir["#{path}/actions/*.rb"].each { |f| require f }
   end
 
