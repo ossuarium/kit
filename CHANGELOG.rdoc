@@ -6,7 +6,6 @@
 
 +KitActionsDefault+ now extends all +Kit::Bit+ instances instead of only those without a group.
 
-
 == 1.0.0
 
 === Breaking changes
@@ -25,5 +24,3 @@ See the skeleton kit for the updated structure.
 === Enhancements
 
 * Added changelog.
-
-=== Bug fixes

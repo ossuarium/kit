@@ -69,5 +69,4 @@ class Kit
       KitDBSupport.send action, config[:db], *args
     end
   end
-
 end
