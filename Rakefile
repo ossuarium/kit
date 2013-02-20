@@ -1,6 +1,6 @@
 #!/usr/bin/env rake
 require 'bundler/gem_tasks'
-require "bump/tasks"
+require 'bump/tasks'
 require 'git'
 
 namespace 'develop' do
