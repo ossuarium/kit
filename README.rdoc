@@ -65,7 +65,7 @@ To use Kit, you will need a kit. You can either
 * {Build your own kit}[https://github.com/razor-x/kit/wiki/Building-your-own-kit].
 If you skipped the above links and just want to get started, run
 
-  $ mkdir my_kit && cd my_kit && git init && git pull git://github.com/razor-x/kits_skeleton.git
+  $ mkdir my_kit && cd my_kit && git init && git pull git://github.com/razor-x/skeleton-kit.git
 
 Once you have a kit, navigate to the root directory and run
 

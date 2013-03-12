@@ -9,7 +9,7 @@ namespace 'develop' do
 
   task :prepare do |t|
     puts 'Test kit exists, no need to clone it.' if File.exists? test_kit
-    Git.clone 'git://github.com/razor-x/kits_skeleton.git', test_kit unless File.exists? test_kit
+    Git.clone 'git://github.com/razor-x/skeleton-kit.git', test_kit unless File.exists? test_kit
   end
 
   task :update  => [ :prepare ] do |t|
