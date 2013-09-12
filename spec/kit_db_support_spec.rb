@@ -8,7 +8,7 @@ describe KitDBSupport do
     @sqlite3 = @config[:sqlite3]
   end
 
-  describe "create!" do
+  describe ".create!" do
 
     it "raises error if adapter not supported" do
       expect { KitDBSupport::create!(:adapter => 'bad_adapter') }.to raise_error RuntimeError, /not supported/
@@ -29,8 +29,8 @@ describe KitDBSupport do
     end
   end
 
-  describe "create" do
-    it "calls create!" do
+  describe ".create" do
+    it "calls .create!" do
       KitDBSupport.should_receive(:create!)
       KitDBSupport::create
     end
@@ -41,7 +41,7 @@ describe KitDBSupport do
     end
   end
 
-  describe "destroy!" do
+  describe ".destroy!" do
 
     it "raises error if adapter not supported" do
       expect { KitDBSupport::destroy!(:adapter => 'bad_adapter') }.to raise_error RuntimeError, /not supported/
@@ -62,8 +62,8 @@ describe KitDBSupport do
     end
   end
 
-  describe "destroy" do
-    it "calls destroy!" do
+  describe ".destroy" do
+    it "calls .destroy!" do
       KitDBSupport.should_receive(:destroy!)
       KitDBSupport::destroy
     end
@@ -74,7 +74,7 @@ describe KitDBSupport do
     end
   end
 
-  describe "connect" do
+  describe ".connect" do
 
     it "makes active record establish a connection" do
       ActiveRecord::Base.should_receive(:establish_connection).with(@config[:sqlite3])
@@ -82,7 +82,7 @@ describe KitDBSupport do
     end
   end
 
-  describe "migrate" do
+  describe ".migrate" do
 
     it "migrates to latest version when called with no arguments" do
       ActiveRecord::Migrator.should_receive(:migrate)
@@ -100,7 +100,7 @@ describe KitDBSupport do
     end
   end
 
-  describe "migrate_to" do
+  describe ".migrate_to" do
 
     it "migrates to a specific migration" do
       ActiveRecord::Migrator.should_receive(:migrate).with('migrations', 001)

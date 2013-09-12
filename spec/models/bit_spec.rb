@@ -19,7 +19,7 @@ describe Kit::Bit do
 
     [:args, :hash].each do |type|
 
-      describe ".perform" do
+      describe "#perform" do
 
         context "given #{type}" do
 

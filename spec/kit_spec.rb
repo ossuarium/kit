@@ -10,14 +10,14 @@ describe Kit do
 
   subject { Kit.new @config_file }
 
-  describe ".path" do
+  describe "#path" do
 
     it "determines the correct path to the kit" do
       subject.path.should == @kit_path
     end
   end
 
-  describe ".config" do
+  describe "#config" do
 
     it "loads the config file" do
       subject.config.should == @config
@@ -40,7 +40,7 @@ describe Kit do
 
   db_actions.each do |action, args|
 
-    describe ".db_#{action}" do
+    describe "#db_#{action}" do
 
       it "calls KitDBSupport::#{action}" do
         KitDBSupport.should_receive(action).with( *( args.map { |x| kind_of(x.class) } ) )
