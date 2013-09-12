@@ -17,12 +17,11 @@ Gem::Specification.new do |gem|
   gem.platform      = Gem::Platform::RUBY
   gem.version       = Kit::VERSION
 
-  gem.add_dependency 'activerecord'
-  gem.add_dependency 'rake'
+  gem.add_dependency 'activerecord', '~> 4.0.0'
+  gem.add_dependency 'rake', '~> 10.1.0'
 
-  gem.add_development_dependency 'sqlite3'
-  gem.add_development_dependency 'rspec'
-  gem.add_development_dependency 'git'
-  gem.add_development_dependency 'bump'
-
+  gem.add_development_dependency 'sqlite3', '~> 1.3.8'
+  gem.add_development_dependency 'git', '~> 1.2.6'
+  gem.add_development_dependency 'rspec', '~> 2.14.1'
+  gem.add_development_dependency 'bump', '~> 0.4.2'
 end

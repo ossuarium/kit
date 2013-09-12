@@ -3,6 +3,10 @@
 Only releases with user facing changes and development improvements noted.
 See commit log for full detail.
 
+== 1.2.0
+
+- Gem requirements now use pessimistic versioning.
+
 == 1.1.3
 
 - Support for Kate project plugin (development).
