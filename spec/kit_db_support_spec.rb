@@ -37,7 +37,7 @@ describe KitDBSupport do
 
     it "does not raise error if sqlite3 database file exists" do
       File.stub(:exists?).with(@sqlite3[:database]).and_return(true)
-      expect { KitDBSupport::create @config[:sqlite3] }.to_not raise_error RuntimeError, /exists/
+      expect { KitDBSupport::create @config[:sqlite3] }.to_not raise_error
     end
   end
 
@@ -57,7 +57,7 @@ describe KitDBSupport do
 
       it "raises error if sqlite3 database file does not exist" do
         File.stub(:exists?).with(@sqlite3[:database]).and_return(false)
-        expect { KitDBSupport::destroy! @config[:sqlite3] }.to raise_error RuntimeError, /does not exist/
+        expect { KitDBSupport::destroy! @config[:sqlite3] }.to raise_exception RuntimeError, /does not exist/
       end
     end
   end
@@ -70,7 +70,7 @@ describe KitDBSupport do
 
     it "does not raise error if sqlite3 database file does not exist" do
       File.stub(:exists?).with(@sqlite3[:database]).and_return(false)
-      expect { KitDBSupport::destroy @config[:sqlite3] }.to_not raise_error RuntimeError, /does not exist/
+      expect { KitDBSupport::destroy @config[:sqlite3] }.to_not raise_exception
     end
   end
 

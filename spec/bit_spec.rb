@@ -32,7 +32,7 @@ describe Kit::Bit do
           end
 
           before :each do
-            @bit = mock('Kit::Bit', :id => 1, :the_action => nil)
+            @bit = double('Kit::Bit', :id => 1, :the_action => nil)
             Kit::Bit.stub(:find).and_return(@bit)
           end
 
