@@ -3,7 +3,7 @@ require 'kit'
 describe Kit::Bit do
 
   before :all do
-    @config_file = File.expand_path '../../test_kit/config.yml', __FILE__
+    @config_file = File.expand_path '../../test-kit/config.yml', __FILE__
     Kit.new(@config_file).db_create.db_connect.db_migrate
   end
 
@@ -23,7 +23,7 @@ describe Kit::Bit do
 
         context "given #{type}" do
 
-          config = File.expand_path '../../test_kit/config.yml', __FILE__
+          config = File.expand_path '../../test-kit/config.yml', __FILE__
           if type == :args
             subject { Kit::Bit::Job.new config, 1, :the_action, :arg_1, :arg_2 }
           else

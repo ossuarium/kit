@@ -103,7 +103,7 @@ After cloning, you can run +yard+ to generate documentation for the source
   $ cd kit
   $ yard
 
-You will also need to set up the test_kit to run specs. Do this with
+You will also need to set up the test-kit to run specs. Do this with
 
   $ rake develop:prepare
 

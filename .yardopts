@@ -1,2 +1,2 @@
 --exclude spec/
---exclude test_kit/
+--exclude test-kit/

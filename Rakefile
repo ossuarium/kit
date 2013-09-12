@@ -5,11 +5,14 @@ require 'git'
 
 namespace 'develop' do
 
-  test_kit = File.expand_path '../test_kit', __FILE__
+  test_kit = File.expand_path '../test-kit', __FILE__
 
   task :prepare do |t|
-    puts 'Test kit exists, no need to clone it.' if File.exists? test_kit
-    Git.clone 'git://github.com/razor-x/skeleton-kit.git', test_kit unless File.exists? test_kit
+    if File.exists? test_kit
+      puts 'Test kit exists, no need to clone it.'
+    else
+      Git.clone 'git://github.com/razor-x/skeleton-kit.git', test_kit
+    end
   end
 
   task :update  => [ :prepare ] do |t|
