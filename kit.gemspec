@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ['razorx@evansosenko.com']
   gem.description   = %q{Kit is a framework for making simple management tools called kits.}
   gem.summary       = %q{Write your shell scripts in beautiful Ruby, put them in a kit, and keep them DRY.}
-  gem.homepage      = "http://evansosenko.com"
+  gem.homepage      = 'http://evansosenko.com'
   gem.license       = 'MIT'
 
   gem.files         = `git ls-files`.split($\)
