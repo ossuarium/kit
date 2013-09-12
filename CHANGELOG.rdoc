@@ -6,6 +6,7 @@ See commit log for full detail.
 == 1.2.0
 
 - Gem requirements now use pessimistic versioning.
+- Guard::RSpec Guardfile.
 
 == 1.1.3
 

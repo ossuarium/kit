@@ -23,5 +23,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'sqlite3', '~> 1.3.8'
   gem.add_development_dependency 'git', '~> 1.2.6'
   gem.add_development_dependency 'rspec', '~> 2.14.1'
+  gem.add_development_dependency 'guard-rspec', '~> 3.0.3'
   gem.add_development_dependency 'bump', '~> 0.4.2'
 end
